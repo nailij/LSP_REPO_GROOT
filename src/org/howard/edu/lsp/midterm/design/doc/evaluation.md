@@ -1,37 +1,37 @@
 # Question 2 — Object-Oriented Design Evaluation
 
-The CourseRegistration class has several object-oriented design problems.
+The CourseRegistration class has several object-oriented design problems.  These problems can be explained using Arthur Riel's design heuristics.
 
-## 1. Too Many Responsibilities
+### 1. Too Many Responsibilities
 
-The class handles student information, calculates tuition, prints confirmations, saves records, sends notification messages, and logs registrations.  These responsibilities should be separated into different classes.
+The CourseRegistration class handles tuition calculations, file storage, confirmation messages, and logging.  This violates **Heuristic 2.8**, which states that a class should capture only one key abstraction, and **Heuristic 2.10**, which recommends moving unrelated behavior into separate classes.
 
-This goes against Arthur Riel's heuristic that classes should have a clear purpose and related responsibilities.  Keeping everything in one class makes the code harder to maintain because changing one feature could affect others.
+The class also demonstrates the "God class" problem described in **Heuristic 3.2**.  It controls too many parts of the registration process, making changes difficult and increasing the chance that one change will affect another feature.
 
-## 2. Poor Encapsulation
+### 2. Poor Encapsulation
 
-All five fields are public, so other parts of the program can modify them directly.  This could lead to incorrect student information, course information, or tuition calculations.
+All five fields are public, allowing other classes to modify student and course information directly.  This violates **Heuristic 2.1**, which states that all data should be hidden within its class.
 
-Riel's heuristics emphasize protecting class data and keeping implementation details hidden.  Making fields private and using appropriate methods would give the classes more control over their data.
+Making these fields private would protect the data and allow the class to control how information is accessed or modified.
 
-## 3. Too Many Dependencies
+### 3. Poor Distribution of Responsibilities
 
-The registerStudent() method directly handles file writing, tuition calculations, console messages, and notification processing.
+**Heuristic 3.1** recommends distributing responsibilities across the system rather than concentrating them in one class.  CourseRegistration performs almost every operation itself instead of collaborating with other objects.
 
-This creates unnecessary coupling between different parts of the system.  If the university wants to change how records are stored or confirmations are sent, the class itself must be modified.
+Separate classes should handle tuition rules, registration storage, and notifications.  This would improve cohesion and reduce coupling.
 
-## 4. Hardcoded Business Rules
+### 4. Hardcoded Business Rules and Dependencies
 
-The tuition rate of $750 per credit hour and the 10% discount for students taking at least 12 credit hours are written directly into registerStudent().
+The tuition rate of $750 per credit hour and the 10% discount are hardcoded into registerStudent().  The class is also directly dependent on FileWriter for storage and console output for confirmations.
 
-Keeping these rules in a separate tuition calculation class would make them easier to update without changing registration processing.
+This makes the system difficult to extend.  For example, changing from file storage to database storage would require modifying the registration class.
 
-## 5. Poor Error Handling
+### 5. Error Handling and Correctness
 
-The class catches all exceptions when saving a registration and prints the error.  However, execution continues even if the registration was not successfully saved.
+The class catches exceptions during file writing but continues processing the registration even when saving fails.  This could result in a confirmation for a registration that was not successfully stored.
 
-This could result in a confirmation being sent for a registration that was not properly recorded.  The system should handle failed operations more clearly.
+Additionally, the code only prints a message about sending an email rather than actually sending one.  These issues could cause incorrect or misleading system behavior.
 
-## Overall Evaluation
+### Overall Evaluation
 
-The current CourseRegistration design has low cohesion and high coupling.  Separating its responsibilities into smaller classes would improve encapsulation, maintainability, testability, and flexibility.
+The CourseRegistration class has low cohesion, high coupling, and poor encapsulation.  Its design violates several of Riel's heuristics, particularly H2.1, H2.8, H2.10, H3.1, and H3.2.  Distributing responsibilities among meaningful classes would make the system easier to maintain, test, and extend.
