@@ -1,0 +1,3 @@
+# CRC Card Explanation
+
+The Library class collaborates with Book because it manages the collection of books and coordinates borrowing and returning.  The Book class is responsible only for storing its own information and managing its availability, so it does not need to know about the Library.  This keeps the classes separate and gives each class a clear responsibility.  The Library enforces the three-book borrowing limit because it tracks borrowing across the entire collection, while an individual Book only knows its own availability.
